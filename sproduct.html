@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Ecommerce Website</title> 
+
+    <!-- FontAwesome link -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+    <link rel="stylesheet" href="style.css"> 
+</head>
+
+<body> 
+    <!-- Header Section -->
+    <section id="header"> 
+        <a class="active" href="index.html"><img src="img/logo.png" class="logo" alt="Logo"></a>
+
+        <div>
+            <ul id="navbar">
+                <li><a class="active" href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="log.html">Login</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="cart.html"><i class="fas fa-shopping-cart"></i></a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Product Details Section -->
+    <section id="prodetails" class="section-p1">
+        <div class="single-pro-image">
+            <img src="img/prolist/1.jpeg" width="100%" id="MainImg" alt="Main Product Image">
+
+            <div class="small-img-group">
+                <div class="small-img-col">
+                    <img src="img/prolist/1.jpeg" width="100%" class="small-img" alt="Product Image 1">
+                </div>
+                <div class="small-img-col">
+                    <img src="img/prolist/2.jpeg" width="100%" class="small-img" alt="Product Image 2">
+                </div>
+                <div class="small-img-col">
+                    <img src="img/prolist/3.jpeg" width="100%" class="small-img" alt="Product Image 3">
+                </div>
+                <div class="small-img-col">
+                    <img src="img/prolist/4.jpeg" width="100%" class="small-img" alt="Product Image 4">
+                </div>
+            </div>
+        </div>    
+
+        <div class="single-pro-details">
+            <h6>Home / T-Shirts</h6>
+            <h4>Men's Fashion T-Shirts</h4>
+            <h2>₹599</h2>
+            <select>
+                <option>Select size</option>
+                <option>XL</option>
+                <option>XXL</option>
+                <option>Small</option>
+                <option>Large</option>
+            </select>
+            <input type="number" value="1" min="1" id="quantity">
+            <button onclick="addToCart()" class="normal">Add To Cart</button>
+            <h4>Product Details</h4>
+            <span>This is a high-quality men's fashion t-shirt, perfect for casual wear.</span>
+        </div>
+    </section>
+
+    <!-- JavaScript for Adding to Cart -->
+    <script>
+        function addToCart() {
+            const product = {
+                name: "Men's Fashion T-Shirts",
+                price: 599,
+                image: "img/prolist/1.jpeg",
+                quantity: parseInt(document.getElementById("quantity").value)
+            };
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.push(product);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Product added to cart!");
+            window.location.href = "cart.html";
+        }
+    </script>
+</body>
+</html>

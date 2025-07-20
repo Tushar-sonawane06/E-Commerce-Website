@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <a href="index.html"><img src="img/logo.png" class="logo" alt="Logo"></a>
+        <nav>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="log.php">Login</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a class="active" href="cart.html"><i class="fas fa-shopping-cart"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section id="page-header" class="about-header">
+        <h2>#ShoppingCart</h2>
+        <h1>Manage your items</h1>
+    </section>
+
+    <!-- Shopping Cart Section -->
+    <section id="cart" class="section-p1">
+        <table>
+            <thead>
+                <tr>
+                    <th>Remove</th>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items"></tbody>
+        </table>
+    </section>
+
+    <!-- Cart Summary -->
+    <div id="cart-summary">
+        <h3>Cart Total</h3>
+        <table>
+            <tr>
+                <td>Cart Subtotal</td>
+                <td id="cart-subtotal">₹0.00</td>
+            </tr>
+            <tr>
+                <td>Shipping</td>
+                <td>Free</td>
+            </tr>
+            <tr>
+                <td><strong>Total</strong></td>
+                <td><strong id="cart-total">₹0.00</strong></td>
+            </tr>
+        </table>
+        <button id="checkout-btn">Proceed to Checkout</button>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Scan to Pay</h3>
+            <p>To complete your purchase, please scan the QR code below:</p>
+            <img src="" id="qr-code" alt="QR Code">
+        </div>
+    </div>
+
+    <!-- JavaScript for Cart Functionality -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("checkout-btn").addEventListener("click", openModal);
+            loadCart();
+        });
+
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const cartItems = document.getElementById("cart-items");
+            let subtotal = 0;
+            cartItems.innerHTML = "";
+
+            cart.forEach((item, index) => {
+                const total = Number(item.price) * Number(item.quantity);
+                subtotal += total;
+                cartItems.innerHTML += `
+                    <tr>
+                        <td><button onclick="removeItem(${index})" class="remove-btn">Remove</button></td>
+                        <td><img src="${item.image}" alt="Product Image" width="50"></td>
+                        <td>${item.name}</td>
+                        <td>₹${Number(item.price).toFixed(2)}</td>
+                        <td><input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)"></td>
+                        <td>₹${total.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("cart-subtotal").innerText = `₹${subtotal.toFixed(2)}`;
+            document.getElementById("cart-total").innerText = `₹${subtotal.toFixed(2)}`;
+        }
+
+        function removeItem(index) {
+            let cart = JSON.parse(localStorage.getItem("cart"));
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCart();
+        }
+
+        function updateQuantity(index, quantity) {
+            let cart = JSON.parse(localStorage.getItem("cart"));
+            if (quantity < 1) quantity = 1;
+            cart[index].quantity = parseInt(quantity);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCart();
+        }
+
+        function openModal() {
+            document.getElementById("checkout-modal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("checkout-modal").style.display = "none";
+        }
+    </script>
+
+    <!-- Styling -->
+    <style>
+        #cart-summary {
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .remove-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .remove-btn:hover {
+            background-color: darkred;
+        }
+        input[type="number"] {
+            width: 50px;
+            text-align: center;
+        }
+        .modal {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; /* Increased width */
+            max-width: 90%;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px gray;
+            border-radius: 10px;
+            z-index: 1000;
+            text-align: center;
+            display: none;
+        }
+        .modal img {
+            width: 100%;
+            height: auto;
+            max-width: 250px;
+        }
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</body>
+</html>
